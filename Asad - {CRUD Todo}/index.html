@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To do list</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="todo-container">
+      <h1>My todo` App</h1>
+      <div class="header">
+        <input type="text" id="input-box" required />
+        <div class="header-btns">
+          <button id="add-btn" onclick="addTask()">Add</button>
+          <button id="reset-btn" onclick="reset()">Reset All</button>
+        </div>
+      </div>
+      <div class="todo-content">
+        <ol id="content-ol" class="content-ol"></ol>
+      </div>
+    </div>
+  </body>
+  <script src="script.js"></script>
+</html>
