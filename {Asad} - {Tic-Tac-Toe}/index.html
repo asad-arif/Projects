@@ -9,7 +9,10 @@
   <body>
     <div class="tic-tac-toe">
       <div class="header">
-        <h1>Tic Tac Toe</h1>
+        <div class="title-btn">
+          <h1>Tic Tac Toe</h1>
+          <button class="reset-btn" onclick="resetGame()">Reset</button>
+        </div>
       </div>
       <div class="grid-container">
         <div class="mydiv"></div>
@@ -22,7 +25,7 @@
         <div class="mydiv"></div>
         <div class="mydiv"></div>
       </div>
-      <button onclick="resetGame()">Reset</button>
+      <p class="resut" onclick="hide()">X is Winner</p>
     </div>
   </body>
   <script src="script.js"></script>

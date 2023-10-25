@@ -1,5 +1,6 @@
 let currentPlayer = 'X';
 const divs = document.querySelectorAll('.mydiv');
+let result = document.querySelectorAll('.resut')[0];
 
 divs.forEach((div) => {
   div.addEventListener('click', () => {
@@ -7,6 +8,7 @@ divs.forEach((div) => {
       div.textContent = currentPlayer;
       currentPlayer = currentPlayer == 'X' ? 'O' : 'X';
     }
+    style();
     checkWinner();
   });
 });
@@ -23,6 +25,8 @@ function checkWinner() {
     [2, 4, 6],
   ];
 
+  let draw = true;
+
   for (const combo of winningCombos) {
     const [a, b, c] = combo;
     if (
@@ -30,15 +34,33 @@ function checkWinner() {
       divs[a].textContent === divs[b].textContent &&
       divs[a].textContent === divs[c].textContent
     ) {
-      alert(`${divs[a].textContent} wins!`);
-      clearBoard();
+      result.textContent = `${divs[a].textContent} wins!`;
+      result.style.display = 'block';
+      clear();
+      reload();
+      return;
     }
   }
+  //draw condition
+  for (const div of divs) {
+    if (!div.textContent) {
+      draw = false;
+      break;
+    }
+  }
+  //Print Draw
+  if (draw) {
+    result.textContent = "It's a draw!";
+    result.style.display = 'block';
+    clear();
+  }
+  //out
 }
 
 function clear() {
   divs.forEach((div) => {
     div.textContent = '';
+    div.style.backgroundColor = '';
   });
 }
 function resetGame() {
@@ -46,5 +68,24 @@ function resetGame() {
   if (r) {
     clear();
   }
+  result.style.display = 'none';
   currentPlayer = 'X';
+}
+function hide() {
+  result.style.display = 'none';
+}
+
+function style() {
+  divs.forEach((div) => {
+    if (div.textContent === 'O') {
+      div.style.backgroundColor = '#ffaf42';
+      div.style.color = 'white';
+    }
+  });
+}
+
+function reload() {
+  setTimeout(() => {
+    window.location.reload(true);
+  }, 2000);
 }
