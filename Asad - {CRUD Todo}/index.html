@@ -8,9 +8,12 @@
   </head>
   <body>
     <div class="todo-container">
-      <h1>My todo` App</h1>
+      <div class="app-name">
+        <img src="logo.png" alt="" class="logo" />
+        <h1>My todo` App</h1>
+      </div>
       <div class="header">
-        <input type="text" id="input-box" required />
+        <input type="text" id="input-box" required autofocus />
         <div class="header-btns">
           <button id="add-btn" onclick="addTask()">Add</button>
           <button id="reset-btn" onclick="reset()">Reset All</button>

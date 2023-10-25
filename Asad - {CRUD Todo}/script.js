@@ -17,12 +17,18 @@ function addTask() {
       newLi.innerText = inputBox.value;
 
       btnContainer.appendChild(completedBtn);
-      completed;
       btnContainer.appendChild(deleteBtn);
       liContainer.appendChild(newLi);
       liContainer.append(btnContainer);
       liContainer.className = 'list-item';
       olContent.append(liContainer);
+      var btns = document.querySelectorAll('.list-item')[0].children[1];
+
+      // Save the task list to localStorage
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      tasks.push(inputBox.value);
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+
       completedBtn.addEventListener('click', () => {
         completed(newLi, liContainer);
       });
@@ -30,8 +36,16 @@ function addTask() {
         deleteContainer(liContainer);
       });
       clear();
+      liContainer.addEventListener('mouseover', () => {
+        btnContainer.style.opacity = 1;
+        btnContainer.style.transition = '0.1s ease-in-out';
+      });
+      liContainer.addEventListener('mouseout', () => {
+        btnContainer.style.opacity = 0;
+        btnContainer.style.transition = '0.1s ease-in-out';
+      });
     } catch (err) {
-      console('Sorry! Unable to add');
+      console.log('Sorry! Unable to add');
     }
   }
 }

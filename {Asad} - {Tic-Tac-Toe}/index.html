@@ -3,27 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
-    <title>Tic-Tac-Toe</title>
+    <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="tic-tac-toe">
-      <h1>Tic-Tac-Toe</h1>
-      <div id="message">Player X's turn</div>
-      <div class="board" id="board">
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
-        <div class="cell" onclick="makeMove(this)"></div>
+      <div class="header">
+        <h1>Tic Tac Toe</h1>
       </div>
-      <button id="reset" onclick="resetGame()">Reset Game</button>
+      <div class="grid-container">
+        <div class="mydiv"></div>
+        <div class="mydiv"></div>
+        <div class="mydiv"></div>
+        <div class="mydiv"></div>
+        <div class="mydiv"></div>
+        <div class="mydiv"></div>
+        <div class="mydiv"></div>
+        <div class="mydiv"></div>
+        <div class="mydiv"></div>
+      </div>
+      <button onclick="resetGame()">Reset</button>
     </div>
-    <script src="script.js"></script>
   </body>
+  <script src="script.js"></script>
 </html>
