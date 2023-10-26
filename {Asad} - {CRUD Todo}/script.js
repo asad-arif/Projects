@@ -4,81 +4,95 @@ const inputBox = document.getElementById('input-box');
 const olContent = document.getElementById('content-ol');
 let dbReadValues = [];
 
-//Load data from localstorage on startup
+// Load data from localstorage on startup
 window.onload = function () {
   readFromDb();
   dbReadValues.forEach((value) => {
-    createElement(value);
+    createElement(value.value, value.styleCheck);
   });
 };
 
 //Add the task
 function addTask() {
-  let check = inputBox.value.trim();
-  if (check !== '') {
+  let taskValue = inputBox.value.trim();
+  if (taskValue !== '') {
     try {
-      writeToDb(inputBox.value);
+      writeToDb(taskValue);
     } catch (err) {
       console.log('Sorry! Unable to add');
     }
   }
 }
 
-//Delete task from DOM and Local Storage
+// Delete task from DOM and Local Storage
 function deleteTask(taskDivElement) {
-  taskDivElement.outerHTML = '';
   const innerLi = taskDivElement.querySelector('.myli');
   for (let i = 0; i < localStorage.length; i++) {
     let key = localStorage.key(i);
-    if (localStorage.getItem(key) === innerLi.textContent) {
+    let val = JSON.parse(localStorage.getItem(key)).value;
+    if (val === innerLi.textContent) {
       localStorage.removeItem(key);
     }
   }
+  taskDivElement.remove();
 }
 
 //Modify the task
-function editTask(taskDivElement) {
-  const innerLi = taskDivElement.querySelector('.myli');
-  let oldText = innerLi.textContent;
-  inputBox.value = oldText;
-  addBtn.style.display = 'none';
-  updateBtn.style.display = 'inline';
+// function editTask(taskDivElement) {
+//   const innerLi = taskDivElement.querySelector('.myli');
+//   let oldText = innerLi.textContent;
+//   inputBox.value = oldText;
+//   addBtn.style.display = 'none';
+//   updateBtn.style.display = 'inline';
 
-  updateBtn.addEventListener('click', () => {
-    updateBtn.style.display = 'none';
-    addBtn.style.display = 'inline';
-    let newText = inputBox.value;
-    innerLi.textContent = newText;
-    for (let i = 0; i < localStorage.length; i++) {
-      let key = localStorage.key(i);
-      if (localStorage.getItem(key) === oldText) {
-        localStorage.setItem(key, newText);
-      }
-    }
-    clear();
-  });
-}
+//   updateBtn.addEventListener('click', () => {
+//     updateBtn.style.display = 'none';
+//     addBtn.style.display = 'inline';
+//     let newText = inputBox.value;
+//     innerLi.textContent = newText;
+//     for (let i = 0; i < localStorage.length; i++) {
+//       let key = localStorage.key(i);
+//       if (localStorage.getItem(key) === oldText) {
+//         localStorage.setItem(key, newText);
+//       }
+//     }
+//     clear();
+//   });
+// }
 
 //Write data to Local Storage
-function writeToDb(value) {
+function writeToDb(taskValue) {
   let key = Math.floor(Math.random() * (1000 - 1 + 1)) + 1;
-  localStorage.setItem(key.toString(), value);
-  createElement(value);
+  localStorage.setItem(
+    key.toString(),
+    JSON.stringify({
+      value: `${taskValue}`,
+      styleCheck: false,
+    })
+  );
   readFromDb();
+  let readLocalV = JSON.parse(localStorage.getItem(key)).value;
+  let readLocalS = JSON.parse(localStorage.getItem(key)).styleCheck;
+  createElement(readLocalV, readLocalS);
 }
 
-//Read data from Local Storage
+//Read data from Local Storage and create array of object
 function readFromDb() {
   let updatedArr = [];
   for (let i = 0; i < localStorage.length; i++) {
     let key = localStorage.key(i);
-    updatedArr.push(localStorage.getItem(key));
-    dbReadValues = updatedArr;
+    let content = JSON.parse(localStorage.getItem(key));
+    updatedArr.push({
+      id: `${key}`,
+      value: `${content.value}`,
+      styleCheck: content.styleCheck,
+    });
   }
+  dbReadValues = updatedArr;
 }
 
 //Create Container and buttons
-function createElement(elem) {
+function createElement(readLocalV, styleCheck) {
   const taskDivElement = document.createElement('div');
   const btnContainer = document.createElement('div');
   const completedBtn = document.createElement('button');
@@ -86,7 +100,7 @@ function createElement(elem) {
   const editBtn = document.createElement('button');
   const newLi = document.createElement('li');
   newLi.className = 'myli';
-  newLi.textContent = elem;
+  newLi.textContent = readLocalV;
   completedBtn.innerText = 'Completed';
   completedBtn.className = 'completed-btn';
   editBtn.innerText = 'Edit';
@@ -100,9 +114,27 @@ function createElement(elem) {
   taskDivElement.append(btnContainer);
   taskDivElement.className = 'list-item';
   olContent.append(taskDivElement);
+  console.log(styleCheck);
+  //for new element
+
   completedBtn.addEventListener('click', () => {
-    completed(newLi, taskDivElement);
+    completed(newLi, taskDivElement, true);
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i);
+      let val = JSON.parse(localStorage.getItem(key));
+      if (val.value == readLocalV) {
+        val.styleCheck = true;
+        const updatedStyle = JSON.stringify(val);
+        localStorage.setItem(key, updatedStyle);
+      }
+      readFromDb();
+    }
   });
+
+  if (styleCheck) {
+    completed(newLi, taskDivElement, styleCheck);
+  }
+
   deleteBtn.addEventListener('click', () => {
     deleteTask(taskDivElement);
   });
@@ -129,7 +161,9 @@ function clear() {
   inputBox.value = '';
 }
 
-function completed(liElement, taskDivElement) {
-  taskDivElement.style.backgroundColor = '#ccf7ff';
-  liElement.style.textDecoration = 'line-through';
+function completed(liElement, taskDivElement, styleCheck) {
+  if (styleCheck) {
+    taskDivElement.style.backgroundColor = '#ccf7ff';
+    liElement.style.textDecoration = 'line-through';
+  }
 }
