@@ -38,27 +38,31 @@ function deleteTask(taskDivElement) {
 }
 
 //Modify the task
-// function editTask(taskDivElement) {
-//   const innerLi = taskDivElement.querySelector('.myli');
-//   let oldText = innerLi.textContent;
-//   inputBox.value = oldText;
-//   addBtn.style.display = 'none';
-//   updateBtn.style.display = 'inline';
+function editTask(taskDivElement) {
+  const innerLi = taskDivElement.querySelector('.myli');
+  var oldText = innerLi.textContent;
+  inputBox.value = oldText;
+  addBtn.style.display = 'none';
+  updateBtn.style.display = 'inline';
 
-//   updateBtn.addEventListener('click', () => {
-//     updateBtn.style.display = 'none';
-//     addBtn.style.display = 'inline';
-//     let newText = inputBox.value;
-//     innerLi.textContent = newText;
-//     for (let i = 0; i < localStorage.length; i++) {
-//       let key = localStorage.key(i);
-//       if (localStorage.getItem(key) === oldText) {
-//         localStorage.setItem(key, newText);
-//       }
-//     }
-//     clear();
-//   });
-// }
+  updateBtn.addEventListener('click', () => {
+    updateBtn.style.display = 'none';
+    addBtn.style.display = 'inline';
+    var newText = inputBox.value;
+    innerLi.textContent = newText;
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i);
+      let content = JSON.parse(localStorage.getItem(key));
+      if (content.value == oldText) {
+        content.value = newText;
+        const updatedStyle = JSON.stringify(content);
+        localStorage.setItem(key, updatedStyle);
+      }
+    }
+    clear();
+    window.location.reload();
+  });
+}
 
 //Write data to Local Storage
 function writeToDb(taskValue) {
@@ -114,7 +118,6 @@ function createElement(readLocalV, styleCheck) {
   taskDivElement.append(btnContainer);
   taskDivElement.className = 'list-item';
   olContent.append(taskDivElement);
-  console.log(styleCheck);
   //for new element
 
   completedBtn.addEventListener('click', () => {
