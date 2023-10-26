@@ -52,22 +52,38 @@ body {
 }
 #add-btn {
   font-size: 20px;
-  padding: 14px 20px;
-  margin: 0px 10px;
+  padding: 20px 20px;
+  margin-right: 5px;
   background-color: #a0f1ff;
   border: none;
   cursor: pointer;
   border-radius: 6px;
   transition: 0.1s ease-in-out;
 }
+#update-btn {
+  font-size: 20px;
+  padding: 20px 20px;
+  margin-right: 5px;
+  background-color: #a0f1ff;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.1s ease-in-out;
+  display: none;
+}
 #add-btn:hover {
+  background-color: #00d9ff;
+  border: none;
+  cursor: pointer;
+}
+#update-btn:hover {
   background-color: #00d9ff;
   border: none;
   cursor: pointer;
 }
 #reset-btn {
   font-size: 20px;
-  padding: 14px 20px;
+  padding: 20px 10px;
   background-color: white;
   border: none;
   border-radius: 6px;
@@ -99,22 +115,31 @@ body {
 }
 
 .completed-btn {
-  background-color: #a0f1ff;
+  background-color: #86d9e7;
   margin: 0px 10px;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 4px;
   border: none;
 }
 .completed-btn:hover {
-  background-color: #86d9e7;
+  background-color: #a0f1ff;
 }
 .delete-btn {
-  background-color: rgb(255, 81, 81);
+  background-color: rgb(228, 52, 52);
   margin: 0px 10px;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 4px;
   border: none;
 }
 .delete-btn:hover {
-  background-color: rgb(228, 52, 52);
+  background-color: rgb(255, 81, 81);
+}
+.edit-btn {
+  background-color: rgb(240, 227, 54);
+  border-radius: 4px;
+  padding: 10px;
+  border: none;
+}
+.edit-btn:hover {
+  background-color: rgb(255, 245, 101);
 }
