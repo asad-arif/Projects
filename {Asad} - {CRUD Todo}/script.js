@@ -41,24 +41,24 @@ async function getServerData() {
 
 //////////////////////////////////
 // send and store data to server()
-function sendToServer() {
-  fetch('https://jsonplaceholder.typicode.com/users/1/todos', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      id: 444,
-      title: 'Lorem Ipsum',
-      completed: false,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      writeToDb(data.title, data.id, data.completed);
-    });
-}
-sendToServer();
+// function sendToServer() {
+//   fetch('https://jsonplaceholder.typicode.com/users/1/todos', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({
+//       id: 444,
+//       title: 'Lorem Ipsum',
+//       completed: false,
+//     }),
+//   })
+//     .then((res) => res.json())
+//     .then((data) => {
+//       writeToDb(data.title, data.id, data.completed);
+//     });
+// }
+// sendToServer();
 
 //Add the task
 function addTask() {
