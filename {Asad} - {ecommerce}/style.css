@@ -69,12 +69,18 @@ body {
   color: #909090;
   font-family: 'Recursive', sans-serif;
   font-style: italic;
-  font-size: 20px;
+  font-size: 16px;
   margin-top: 20px;
+  overflow-x: auto;
 }
+.divider ul::-webkit-scrollbar {
+  display: none;
+}
+
 .divider ul li {
   margin: 0px 20px;
   cursor: pointer;
+  padding-top: 10px;
 }
 .two-icons i {
   margin: 0px 2px;

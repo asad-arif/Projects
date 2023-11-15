@@ -1,20 +1,56 @@
-// DOM Elements
+//DOM Elements
 const gridLayout = document.querySelector('.grid');
 const allListItem = document.getElementById('all');
 
 // Data
-let productDisplay = [];
-let pageCount = 0;
+let fetchedProductArr = [];
+let pageCount = 1;
+const limit = 10;
 
 //Page Load Content
-window.onload = function () {
-  main('https://dummyjson.com/products?limit=10&skip=0');
+window.onload = async function () {
+  await fetchProducts('https://dummyjson.com/products?limit=0&skip=0');
+  createPageNumbers(fetchedProductArr);
 };
 // Fetch data from the server
 const fetchProducts = async (url) => {
   const response = await fetch(url);
   const data = await response.json();
-  productDisplay = data.products;
+  fetchedProductArr = data.products;
+  let productDisplay = fetchedProductArr.slice(0, 10);
+  productDisplay.forEach((product) => {
+    createProductCard(
+      product.thumbnail,
+      product.title,
+      shortenDescription(product.description),
+      product.rating,
+      product.price
+    );
+  });
+};
+
+const createPageNumbers = (fetchedProductArr) => {
+  let pageNumberContainer = document.getElementById('page-ul');
+  if (fetchedProductArr.length < 10) {
+    pageNumberContainer.innerHTML = ''; // Clear the container
+  } else {
+    let pageToBeCreated = Math.ceil(fetchedProductArr.length / limit);
+    pageNumberContainer.innerHTML = ''; // Clear the container
+
+    let previousLi = document.createElement('li');
+    previousLi.textContent = 'Previous';
+    pageNumberContainer.appendChild(previousLi);
+
+    for (let i = 1; i <= pageToBeCreated; i++) {
+      let pageLi = document.createElement('li');
+      pageLi.textContent = i;
+      pageNumberContainer.appendChild(pageLi);
+    }
+
+    let nextLi = document.createElement('li');
+    nextLi.textContent = 'Next';
+    pageNumberContainer.appendChild(nextLi);
+  }
 };
 
 // Create product cards for the grid
@@ -51,92 +87,83 @@ const createProductCard = (thumbnail, title, description, rating, price) => {
   gridLayout.appendChild(card);
 };
 
-// Main function
-const main = async (url) => {
-  await fetchProducts(url);
-  productDisplay.forEach((product) => {
-    createProductCard(
-      product.thumbnail,
-      product.title,
-      shortenDescription(product.description),
-      product.rating,
-      product.price
-    );
-  });
-};
-
-// Event listener for category selection
-function addCategoryClickListeners() {
-  const categoryListItems = document.querySelectorAll('.cat li');
-  categoryListItems.forEach((element) => {
-    element.addEventListener('click', () => {
-      const category = element.textContent;
-      handleCategorySelection(category);
-    });
-  });
-}
-addCategoryClickListeners();
-
-// Handle category selection
-const handleCategorySelection = (category) => {
-  if (category === 'All') {
-    clearGrid();
-    pageCount = 0;
-    const skip = getSkip(pageCount);
-    main(`https://dummyjson.com/products?limit=10&skip=${skip}`);
-  } else {
-    const url = `https://dummyjson.com/products/category/${category}`;
-    clearGrid();
-    main(url);
-  }
-};
-
-// Event listener for page navigation
-function addPageClickListeners() {
-  const pageListItems = document.querySelectorAll('.page-ul li');
-  pageListItems.forEach((element) => {
-    element.addEventListener('click', () => {
-      const clickedPage = element.textContent;
-      handlePageNavigation(clickedPage);
-    });
-  });
-}
-addPageClickListeners();
-
-// Handle page navigation
-const handlePageNavigation = (clickedPage) => {
-  if (clickedPage === 'Next') {
-    clearGrid();
-    pageCount++;
-    const skip = getSkip(pageCount);
-    main(`https://dummyjson.com/products?limit=10&skip=${skip}`);
-  } else if (clickedPage === 'Previous') {
-    clearGrid();
-    pageCount--;
-    const skip = getSkip(pageCount);
-    main(`https://dummyjson.com/products?limit=10&skip=${skip}`);
-  } else {
-    const skip = parseInt(clickedPage, 10) - 1;
-    pageCount = skip;
-    clearGrid();
-    main(`https://dummyjson.com/products?limit=10&skip=${skip}`);
-  }
-};
-
-// Clear the grid
 const clearGrid = () => {
   gridLayout.innerHTML = '';
 };
 
-// Shorten product description
 const shortenDescription = (description) => {
   const words = description.split(' ');
-  const first10Words = words.slice(0, 10);
+  const first10Words = words.slice(0, 9);
   const result = first10Words.join(' ');
-  return result + '...';
+  return result + '..';
+};
+const getSkip = (pageNumber) => {
+  return pageNumber * 10;
 };
 
-// Calculate the skip value for pagination
-const getSkip = (pageCount) => {
-  return pageCount * 10;
-};
+// Event listener for page navigation
+function addPageClickListeners() {
+  const pageListItems = document.querySelectorAll('#page-ul li');
+  pageListItems.forEach((element) => {
+    element.addEventListener('click', () => {
+      const clickedPage = element.textContent;
+      if (clickedPage === 'Next') {
+        clearGrid();
+        pageCount++;
+        const skip = getSkip(pageCount);
+        fetchProducts(`https://dummyjson.com/products?limit=10&skip=${skip}`);
+      } else if (clickedPage === 'Previous') {
+        clearGrid();
+        pageCount--;
+        const skip = getSkip(pageCount);
+        fetchProducts(`https://dummyjson.com/products?limit=10&skip=${skip}`);
+      } else {
+        pageCount = parseInt(clickedPage, 10) - 1;
+        const skip = getSkip(pageCount);
+        clearGrid();
+        fetchProducts(`https://dummyjson.com/products?limit=10&skip=${skip}`);
+      }
+    });
+  });
+}
+
+window.setTimeout(() => {
+  addPageClickListeners();
+  categoryWisefetchedProductArr();
+}, 1000);
+
+async function productCategories() {
+  let categoriesContainer = document.getElementById('categories');
+  const response = await fetch('https://dummyjson.com/products/categories');
+  const fetchedCategories = await response.json();
+  for (let i = 0; i < fetchedCategories.length; i++) {
+    let pageLi = document.createElement('li');
+    pageLi.textContent = fetchedCategories[i];
+    categoriesContainer.appendChild(pageLi);
+  }
+}
+
+productCategories();
+
+// Event listener for category selection
+function categoryWisefetchedProductArr() {
+  const allCategoriesList = document.querySelectorAll('.categories li');
+  console.log(allCategoriesList);
+  allCategoriesList.forEach((element) => {
+    element.addEventListener('click', () => {
+      const category = element.textContent;
+      if (category === 'All') {
+        clearGrid();
+        pageCount = 0;
+        const skip = getSkip(pageCount);
+        fetchProducts(`https://dummyjson.com/products?limit=0&skip=0`);
+        createPageNumbers(fetchedProductArr);
+      } else {
+        const url = `https://dummyjson.com/products/category/${category}`;
+        clearGrid();
+        fetchProducts(url);
+        createPageNumbers(fetchedProductArr);
+      }
+    });
+  });
+}
